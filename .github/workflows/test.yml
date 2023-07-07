@@ -3,7 +3,7 @@ name: Testing stuff
 on:
   push:
     branches:
-      - test
+      - master
 jobs:
   a_test_job:
     runs-on: ubuntu-20.04
