@@ -33,7 +33,7 @@ jobs:
       - name: does commit messages contain '#skip'
         env:
           TO_SKIP: ${{ !contains(join(toJson(github.event.commits.*.message)), '#skip') }}
-        run: echo "$TO_SKIP""
+        run: echo "$TO_SKIP"
       - uses: superfly/flyctl-actions/setup-flyctl@master
       - name: deploy to flyio
         if: ${{ github.event_name == 'push' }} && "$TO_SKIP"
