@@ -36,11 +36,10 @@ jobs:
       #   run: echo "$TO_SKIP"
       - uses: superfly/flyctl-actions/setup-flyctl@master
       - name: deploy to flyio
-        if: ${{ github.event_name == 'push' && $TO_SKIP }}
+        if: ${{ github.event_name == 'push' && !contains(join(toJson(github.event.commits.*.message)), '#skip') }}
         run: flyctl deploy --remote-only
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
-          TO_SKIP: ${{ !contains(join(toJson(github.event.commits.*.message)), '#skip') }}
   tag_release:
     needs: [simple_deployment_pipeline]
     runs-on: ubuntu-20.04
@@ -49,9 +48,8 @@ jobs:
       - name: list all folders
         run: ls -la
       - name: Bump version and push tag
-        if: ${{ github.event_name == 'push' && $TO_SKIP }}
+        if: ${{ github.event_name == 'push' && !contains(join(toJson(github.event.commits.*.message)), '#skip') }}
         uses: anothrNick/github-tag-action@1.67.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DEFAULT_BUMP: patch
-          TO_SKIP: ${{ !contains(join(toJson(github.event.commits.*.message)), '#skip') }}
