@@ -30,10 +30,6 @@ jobs:
       #     command: npm run test:e2e
       #     start-windows: npm run start-prod
       #     wait-on: 'http://[::1]:5000/'
-      # - name: does commit messages contain '#skip'
-      #   env:
-      #     TO_SKIP: ${{ !contains(join(toJson(github.event.commits.*.message)), '#skip') }}
-      #   run: echo "$TO_SKIP"
       - uses: superfly/flyctl-actions/setup-flyctl@master
       - name: deploy to flyio
         if: ${{ github.event_name == 'push' && !contains(join(toJson(github.event.commits.*.message)), '#skip') }}
