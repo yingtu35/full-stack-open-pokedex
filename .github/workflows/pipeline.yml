@@ -36,7 +36,7 @@ jobs:
         run: flyctl deploy --remote-only
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
-          TO_SKIP: ${{ !contains(join(toJson(github.event.commits.*.message))) }}
+          TO_SKIP: ${{ !contains(join(toJson(github.event.commits.*.message)), '#skip') }}
   tag_release:
     needs: [simple_deployment_pipeline]
     runs-on: ubuntu-20.04
@@ -50,4 +50,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DEFAULT_BUMP: patch
-          TO_SKIP: ${{ !contains(join(toJson(github.event.commits.*.message))) }}
+          TO_SKIP: ${{ !contains(join(toJson(github.event.commits.*.message)), '#skip') }}
