@@ -7,11 +7,11 @@ const PORT = process.env.PORT || 5000
 app.use(express.static('dist'))
 
 app.use('/version', (req, res) => {
-  res.send('2')
+  res.status(400).send('failure test')
 })
 
 app.use('/health', (req, res) => {
-  res.status(400).send('error')
+  res.send('ok')
 })
 
 app.listen(PORT, () => {
