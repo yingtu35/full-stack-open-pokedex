@@ -49,3 +49,32 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DEFAULT_BUMP: patch
+  notification:
+    needs: [simple_deployment_pipeline, tag_release]
+    runs-on: ubuntu-20.04
+    steps:
+      - name: discord success
+        uses: actions/checkout@v3
+        if: success()
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          status: ${{ job.status }}
+          content: 'A new version of pokedex is deployed. Please visit https://pokedex-yingtu.fly.dev/'
+          title: 'build and deployment'
+          description: 'Build and deploy succeeded'
+          # color: 0x0000ff
+          url: 'https://github.com/yingtu35/full-stack-open-pokedex'
+          username: GitHub
+
+      - name: discord success
+        uses: actions/checkout@v3
+        if: failure()
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          status: ${{ job.status }}
+          content: 'Build failed'
+          title: 'build and deployment'
+          description: 'Something wrong happened. Please check the event'
+          color: 0xff0000
+          # url: 'https://github.com/yingtu35/full-stack-open-pokedex'
+          username: GitHub
