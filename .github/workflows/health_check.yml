@@ -3,7 +3,9 @@ name: health_check
 on:
   push:
     branches:
-      - master
+      - test
+  # schedule:
+  #   - cron: '0 9 * * *'
 
 jobs:
   http_health_check:
