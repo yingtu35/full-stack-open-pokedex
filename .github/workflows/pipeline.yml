@@ -36,12 +36,26 @@ jobs:
         run: flyctl deploy --remote-only
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
-      - name: Discord notification
+      - name: Discord notification success
         uses: rjstone/discord-webhook-notify@v1
-        if: always()
+        if: ${{ github.event_name == 'push' && success() }}
         with:
           severity: info
-          details: test
+          details: Build success. Check out https://pokedex-yingtu.fly.dev/
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+      - name: Discord notification failure
+        uses: rjstone/discord-webhook-notify@v1
+        if: ${{ github.event_name == 'push' && failure() }}
+        with:
+          severity: info
+          details: Build failure. See Commit URL for more details
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+      - name: Discord notification canceled
+        uses: rjstone/discord-webhook-notify@v1
+        if: ${{ github.event_name == 'push' && cancelled() }}
+        with:
+          severity: info
+          details: Build cancelled.
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
   tag_release:
     needs: [simple_deployment_pipeline]
