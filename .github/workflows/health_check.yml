@@ -1,11 +1,8 @@
 name: health_check
 
 on:
-  push:
-    branches:
-      - test
-  # schedule:
-  #   - cron: '0 9 * * *'
+  schedule:
+    - cron: '0 9 * * *'
 
 jobs:
   http_health_check:
@@ -15,7 +12,7 @@ jobs:
         uses: jtalk/url-health-check-action@v3
         with:
           # Check the following URLs one by one sequentially
-          url: https://pokedex-yingtu.fly.dev/version
+          url: https://pokedex-yingtu.fly.dev/health
           # Follow redirects, or just report success on 3xx status codes
           follow-redirect: false # Optional, defaults to "false"
           # Fail this action after this many failed attempts
@@ -24,3 +21,18 @@ jobs:
           retry-delay: 5s # Optional, only applicable to max-attempts > 1
           # Retry all errors, including 404. This option might trigger curl upgrade.
           retry-all: false # Optional, defaults to "false"
+      - uses: actions/checkout@v3
+      - name: Discord notification success
+        uses: rjstone/discord-webhook-notify@v1
+        if: success()
+        with:
+          severity: info
+          details: Health check on https://pokedex-yingtu.fly.dev/ success
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+      - name: Discord notification failure
+        uses: rjstone/discord-webhook-notify@v1
+        if: failure()
+        with:
+          severity: error
+          details: Health check on https://pokedex-yingtu.fly.dev/ failure
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
