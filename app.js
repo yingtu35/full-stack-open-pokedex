@@ -11,7 +11,7 @@ app.use('/version', (req, res) => {
 })
 
 app.use('/health', (req, res) => {
-  res.send('ok')
+  res.status(400).send('error')
 })
 
 app.listen(PORT, () => {

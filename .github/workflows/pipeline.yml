@@ -27,9 +27,10 @@ jobs:
       # - name: e2e tests
       #   uses: cypress-io/github-action@v5
       #   with:
+      #     browser: chrome
       #     command: npm run test:e2e
-      #     start-windows: npm run start-prod
-      #     wait-on: 'http://[::1]:5000/'
+      #     start: npm run start-prod
+      #     wait-on: http://localhost:5000
       - uses: superfly/flyctl-actions/setup-flyctl@master
       - name: deploy to flyio
         if: ${{ github.event_name == 'push' && !contains(join(toJson(github.event.commits.*.message)), '#skip') }}
